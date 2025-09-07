@@ -18,56 +18,56 @@ Our smart contract incorporates the encrypted metadata mechanism from Ava Labs' 
 
 - Standardized metadata structure that preserves communication privacy
 
-Core Functionalities
-Public key registration for asymmetric encryption
+### Core Functionalities
+1. Public key registration for asymmetric encryption
 
-NFT-based consent receipts with status and expiration
+2. NFT-based consent receipts with status and expiration
 
-Granular access control that patients can revoke anytime
+3. Granular access control that patients can revoke anytime
 
-Off-chain medical metadata with on-chain verifiable references
+4. Off-chain medical metadata with on-chain verifiable references
 
-🏗️ Hybrid Architecture
-On-chain (Blockchain)
-Consent NFTs and access control
+## 🏗️ Hybrid Architecture
+###On-chain (Blockchain)
+° Consent NFTs and access control
 
-Public keys and verification hashes
+° Public keys and verification hashes
 
-Encrypted metadata events
+° Encrypted metadata events
 
-Off-chain (Decentralized Storage)
-Actual medical records (IPFS, Arweave, etc.)
+### Off-chain (Decentralized Storage)
+° Actual medical records (IPFS, Arweave, etc.)
 
-Data encrypted with DEKs (Data Encryption Keys)
+° Data encrypted with DEKs (Data Encryption Keys)
 
-⚡ Workflow
-Registration: Patients and doctors register their public keys
+## ⚡ Workflow
+1. Registration: Patients and doctors register their public keys
 
-Consent: Patients grant access through NFTs with encrypted DEKs
+2. Consent: Patients grant access through NFTs with encrypted DEKs
 
-Access: Doctors retrieve DEKs through encrypted events
+3. Access: Doctors retrieve DEKs through encrypted events
 
-Decryption: Access to off-chain medical records using DEKs
+4. Decryption: Access to off-chain medical records using DEKs
 
-Revocation: Patients can revoke access at any time
+5. Revocation: Patients can revoke access at any time
 
-🛡️ Security Advantages
-Medical data never on blockchain - Only references and encrypted keys
+## 🛡️ Security Advantages
+° Medical data never on blockchain - Only references and encrypted keys
 
-Dual encryption layer - Asymmetric (public keys) and symmetric (DEKs)
+° Dual encryption layer - Asymmetric (public keys) and symmetric (DEKs)
 
-Complete audit trail - All access is immutably recorded
+° Complete audit trail - All access is immutably recorded
 
-Patient-centric control - Only patients grant and revoke access
+° Patient-centric control - Only patients grant and revoke access
 
-🌐 Use Cases
-Secure telemedicine - Temporary medical records sharing
+## 🌐 Use Cases
+° Secure telemedicine - Temporary medical records sharing
 
-Medical research - Verifiable consent for data usage
+° Medical research - Verifiable consent for data usage
 
-Health insurance - Audited access to relevant information
+° Health insurance - Audited access to relevant information
 
-Medical emergencies - Pre-approved emergency access protocols
+° Medical emergencies - Pre-approved emergency access protocols
 
 SaluData represents the next generation of medical data management, combining the best of blockchain technology with advanced encryption standards to create a truly patient-centric and secure system that respects privacy while enabling necessary medical access.
 
