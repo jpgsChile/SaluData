@@ -87,7 +87,7 @@ https://testnet.snowtrace.io/address/0x070018089b50cdac6b25bdb60b7c71a829c29f10
 
 - **Blockchain:** Avalanche (Fuji Testnet, Higia L1)
 - **Smart Contracts:** Solidity
-- **Tokens:** ERC-20 (`HealthToken - HLT`), eERC-20 (`EncryptedERC`)
+- **Tokens:** ERC-721 + EncryptedMetadata.sol
 - **Development:** Remix / Hardhat / Foundry
 - **Wallets:** Core | Metamask
 - **Decentralized Storage:** IPFS
