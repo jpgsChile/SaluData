@@ -3,22 +3,20 @@
 # SaluData - Decentralized Secure Medical Records Management
 
 ## 🩺 The Problem
-
 Medical records management faces critical challenges in privacy, security, and access control. Patients lose control over their data once shared, and there's a constant risk of sensitive data breaches in traditional centralized systems.
 
 ## 💡 Our Solution
-
 SaluData is a decentralized protocol that enables patients to maintain complete control over their medical records while facilitating secure, temporary access to healthcare professionals through consent NFTs.
 
 ## 🔐 Key Technical Features
-Integration with Ava Labs' EncryptedMetadata
+### Integration with Ava Labs' EncryptedMetadata
 Our smart contract incorporates the encrypted metadata mechanism from Ava Labs' EncryptedERC standard, implementing:
 
-Secure communication through encrypted events via the PrivateMessage event
+- Secure communication through encrypted events via the PrivateMessage event
 
-Secure DEK key transmission using EncryptedMetadata's encrypted messaging pattern
+- Secure DEK key transmission using EncryptedMetadata's encrypted messaging pattern
 
-Standardized metadata structure that preserves communication privacy
+- Standardized metadata structure that preserves communication privacy
 
 Core Functionalities
 Public key registration for asymmetric encryption
