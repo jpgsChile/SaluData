@@ -1,6 +1,6 @@
 <img width="825" height="811" alt="image" src="https://github.com/user-attachments/assets/09dba68b-5937-4c42-af7d-c006822a19dd" />
 
-### SaluData - Decentralized Secure Medical Records Management
+# SaluData - Decentralized Secure Medical Records Management
 
 🩺 The Problem
 Medical records management faces critical challenges in privacy, security, and access control. Patients lose control over their data once shared, and there's a constant risk of sensitive data breaches in traditional centralized systems.
