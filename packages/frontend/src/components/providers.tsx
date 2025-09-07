@@ -1,14 +1,13 @@
-// providers/Web3Provider.tsx
 'use client'
-import { ReactNode } from 'react'
+
 import { WagmiProvider } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { config } from '../lib/wagmi'
+import { config } from '@/lib/contract-config'
+import { ReactNode, useState } from 'react'
 
-// Creamos un cliente para la gestión de datos
-const queryClient = new QueryClient()
+export function Providers({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient())
 
-export function Web3Provider({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>

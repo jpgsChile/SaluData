@@ -1,39 +1,59 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.27; // <--- Versión de pragma unificada
 
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
-/**
- * @title SaluData
- * @notice Un sistema descentralizado para la gestión de datos médicos con identidad criptográfica.
- * @dev La confianza se establece a través del registro de perfiles y claves públicas de cifrado,
- * permitiendo un intercambio de datos seguro y verificado por el consentimiento del paciente.
- */
-contract SaluData is ERC721 {
+// NO MÁS IMPORTACIONES DE ENCRYPTEDMETADATA NI TYPES AQUÍ
+
+// === INICIO CÓDIGO DE TYPES.SOL INTEGRADO ===
+struct Metadata {
+    address messageFrom;
+    address messageTo;
+    string messageType;
+    bytes encryptedMsg;
+}
+// === FIN CÓDIGO DE TYPES.SOL INTEGRADO ===
+
+
+// === INICIO CÓDIGO DE ENCRYPTEDMETADATA.SOL INTEGRADO ===
+// NO HEREDAMOS DE OTRO CONTRATO, ASÍ QUE LAS FUNCIONES DEBEN SER SIMPLEMENTE INTERNAS
+contract SaluData is ERC721 { // <--- Ya no hereda de EncryptedMetadata
     using Counters for Counters.Counter;
-    Counters.Counter private _consentTokenIds;
+    Counters.Counter private _tokenIds;
 
-    // --- ROLES Y ESTADOS ---
+    // --- Funciones y Eventos de EncryptedMetadata (INTEGRADOS) ---
+    event PrivateMessage(
+        address indexed from,
+        address indexed to,
+        Metadata metadata
+    );
 
-    enum Role { None, Patient, Doctor }
-    enum AccessStatus { Inactive, Active, Revoked }
-
-    struct UserProfile {
-        Role role;
-        string publicKey; // ¡LA PIEZA CLAVE! La clave pública de cifrado del usuario.
-        string name;
-        string licenseNumber;
-        string clinicInfo;
+    // Esta función ahora es una función interna directamente en SaluData
+    function _sendEncryptedMetadata(
+        address to,
+        string memory messageType,
+        bytes calldata message
+    ) internal { // Ya no es 'virtual'
+        Metadata memory metadata = Metadata({
+            messageFrom: msg.sender,
+            messageTo: to,
+            messageType: messageType,
+            encryptedMsg: message
+        });
+        emit PrivateMessage(msg.sender, to, metadata);
     }
+    // === FIN CÓDIGO DE ENCRYPTEDMETADATA.SOL INTEGRADO ===
+
+
+    // --- ESTRUCTURAS Y ESTADOS (RESTO DE SALUDATA) ---
+    enum AccessStatus { Inactive, Active, Revoked }
 
     struct MedicalRecord {
         bytes32 recordId;
-        address patientOwner;
-        address uploadedBy;
+        address owner;
         string cid;
         string metaHash;
-        uint256 timestamp;
     }
 
     struct AccessGrant {
@@ -41,146 +61,79 @@ contract SaluData is ERC721 {
         address patient;
         address doctor;
         AccessStatus status;
-        // NUEVO: Este campo es ahora esencial.
-        string encryptedDEK; // La clave del archivo, cifrada con la clave pública del doctor.
+        string encryptedDEKForDoctor;
         uint256 expiresAt;
     }
 
     // --- MAPPINGS ---
-    mapping(address => UserProfile) public profiles;
-    mapping(bytes32 => bool) private doctorUniqueness;
     mapping(bytes32 => MedicalRecord) public records;
     mapping(uint256 => AccessGrant) public consentGrants;
+    mapping(address => string) public publicEncryptionKeys;
 
     // --- EVENTOS ---
-    event UserRegistered(address indexed user, Role role, string publicKey);
-    event RecordUploaded(bytes32 indexed recordId, address indexed patient, address indexed uploader);
-    event ConsentGranted(uint256 indexed consentTokenId, address indexed patient, address indexed doctor);
-    event ConsentRevoked(uint256 indexed consentTokenId);
+    event RecordRegistered(bytes32 indexed recordId, address indexed owner);
+    event ConsentGranted(bytes32 indexed recordId, address indexed doctor, uint256 indexed consentTokenId);
+    event AccessRevoked(uint256 indexed consentTokenId);
+    event PublicKeyRegistered(address indexed user, string publicKey);
+    // El evento PrivateMessage es ahora parte de este contrato integrado.
 
     constructor() ERC721("SaluData Consent Receipt", "SDCR") {}
 
-    // --- FUNCIONES DE REGISTRO CON CLAVE PÚBLICA ---
-
-    /**
-     * @notice Registra un usuario como Paciente, asociando su clave pública.
-     * @param publicKey La clave pública de cifrado del paciente (ej. formato ECIES).
-     */
-    function registerAsPatient(string calldata publicKey) public {
-        require(profiles[msg.sender].role == Role.None, "User already registered");
+    function registerPublicKey(string calldata publicKey) public {
         require(bytes(publicKey).length > 0, "Public key cannot be empty");
-
-        profiles[msg.sender] = UserProfile({
-            role: Role.Patient,
-            publicKey: publicKey,
-            name: "",
-            licenseNumber: "",
-            clinicInfo: ""
-        });
-        emit UserRegistered(msg.sender, Role.Patient, publicKey);
+        publicEncryptionKeys[msg.sender] = publicKey;
+        emit PublicKeyRegistered(msg.sender, publicKey);
     }
 
-    /**
-     * @notice Registra un usuario como Doctor, asociando su clave pública y datos profesionales.
-     * @param publicKey La clave pública de cifrado del doctor.
-     * @param name Nombre completo del doctor.
-     * @param licenseNumber Matrícula profesional.
-     * @param clinicInfo Información de la clínica o consultorio.
-     */
-    function registerAsDoctor(string calldata publicKey, string calldata name, string calldata licenseNumber, string calldata clinicInfo) public {
-        require(profiles[msg.sender].role == Role.None, "User already registered");
-        require(bytes(publicKey).length > 0, "Public key cannot be empty");
-
-        bytes32 uniquenessHash = keccak256(abi.encodePacked(name, licenseNumber));
-        require(!doctorUniqueness[uniquenessHash], "Doctor with this name and license already exists");
-
-        doctorUniqueness[uniquenessHash] = true;
-        profiles[msg.sender] = UserProfile({
-            role: Role.Doctor,
-            publicKey: publicKey,
-            name: name,
-            licenseNumber: licenseNumber,
-            clinicInfo: clinicInfo
-        });
-        emit UserRegistered(msg.sender, Role.Doctor, publicKey);
+    function registerRecord(bytes32 recordId, string calldata cid, string calldata metaHash) public {
+        require(records[recordId].owner == address(0), "Record ID already exists");
+        records[recordId] = MedicalRecord(recordId, msg.sender, cid, metaHash);
+        emit RecordRegistered(recordId, msg.sender);
     }
-
-    // --- FUNCIONES DE GESTIÓN DE DATOS ---
-
-    function uploadRecord(address patientAddress, bytes32 recordId, string calldata cid, string calldata metaHash) public {
-        Role senderRole = profiles[msg.sender].role;
-        require(senderRole == Role.Patient || senderRole == Role.Doctor, "Caller must be a registered Patient or Doctor");
+    
+    function grantConsent(bytes32 recordId, address doctor, bytes calldata encryptedDEKForDoctor, uint256 durationSeconds) public {
+        require(records[recordId].owner == msg.sender, "Only owner can grant consent");
+        require(bytes(publicEncryptionKeys[doctor]).length > 0, "Doctor has no public key registered");
+        require(bytes(encryptedDEKForDoctor).length > 0, "Encrypted DEK cannot be empty");
         
-        if (senderRole == Role.Doctor) {
-            require(profiles[patientAddress].role == Role.Patient, "Target address is not a patient");
-        } else {
-            patientAddress = msg.sender;
-        }
-
-        require(records[recordId].patientOwner == address(0), "Record ID already exists");
-
-        records[recordId] = MedicalRecord({
-            patientOwner: patientAddress,
-            uploadedBy: msg.sender,
-            recordId: recordId,
-            cid: cid,
-            metaHash: metaHash,
-            timestamp: block.timestamp
-        });
-        emit RecordUploaded(recordId, patientAddress, msg.sender);
-    }
-
-    // --- FUNCIONES DE PERMISOS ---
-
-    /**
-     * @notice El paciente concede consentimiento, creando un NFT con la clave de acceso cifrada para el doctor.
-     * @param recordId El ID del estudio al que se da acceso.
-     * @param doctor La dirección del doctor que recibirá el acceso.
-     * @param encryptedDEK La clave del archivo (DEK), ya cifrada por el paciente con la clave pública del doctor.
-     */
-    function grantConsent(bytes32 recordId, address doctor, string calldata encryptedDEK) public {
-        require(profiles[msg.sender].role == Role.Patient, "Only patients can grant consent");
-        require(profiles[doctor].role == Role.Doctor, "Consent can only be granted to doctors");
-        require(records[recordId].patientOwner == msg.sender, "Patient does not own this record");
-
-        _consentTokenIds.increment();
-        uint256 newConsentTokenId = _consentTokenIds.current();
+        _tokenIds.increment();
+        uint256 newConsentTokenId = _tokenIds.current();
 
         _safeMint(doctor, newConsentTokenId);
-
+        
         consentGrants[newConsentTokenId] = AccessGrant({
             recordId: recordId,
             patient: msg.sender,
             doctor: doctor,
             status: AccessStatus.Active,
-            encryptedDEK: encryptedDEK, // Se almacena la clave cifrada.
-            expiresAt: block.timestamp + 1 hours
+            encryptedDEKForDoctor: string(encryptedDEKForDoctor),
+            expiresAt: block.timestamp + durationSeconds
         });
 
-        emit ConsentGranted(newConsentTokenId, msg.sender, doctor);
+        emit ConsentGranted(recordId, doctor, newConsentTokenId);
+
+        // La llamada a _sendEncryptedMetadata ahora se resuelve dentro de este mismo contrato
+        _sendEncryptedMetadata(doctor, "ACCESS_KEY_DEK", encryptedDEKForDoctor);
+    }
+
+    function getAccessDetails(uint256 consentTokenId) public view returns (string memory cid, string memory encryptedDEK) {
+        require(_ownerOf(consentTokenId) == msg.sender, "Caller does not own this consent token");
+        
+        AccessGrant memory grant = consentGrants[consentTokenId];
+        
+        require(grant.doctor == msg.sender, "Not authorized");
+        require(grant.status == AccessStatus.Active, "Consent is not active");
+        require(block.timestamp < grant.expiresAt, "Consent has expired");
+
+        MedicalRecord memory record = records[grant.recordId];
+        return (record.cid, grant.encryptedDEKForDoctor);
     }
 
     function revokeConsent(uint256 consentTokenId) public {
         AccessGrant storage grant = consentGrants[consentTokenId];
         require(grant.patient == msg.sender, "Only the patient can revoke consent");
-        require(grant.status == AccessStatus.Active, "Consent is not active");
-
-        grant.status = AccessStatus.Revoked;
-        emit ConsentRevoked(consentTokenId);
-    }
-
-    // --- FUNCIONES DE LECTURA (Para el Doctor) ---
-
-    function getAccessDetails(uint256 consentTokenId) public view returns (string memory cid, string memory encryptedDEK) {
-        require(ownerOf(consentTokenId) == msg.sender, "Caller does not own the consent NFT");
         
-        AccessGrant memory grant = consentGrants[consentTokenId];
-        require(grant.doctor == msg.sender, "Not authorized");
-
-        if (grant.status != AccessStatus.Active) revert("Access has been revoked");
-        if (block.timestamp >= grant.expiresAt) revert("Access has expired");
-
-        MedicalRecord memory record = records[grant.recordId];
-        return (record.cid, grant.encryptedDEK);
+        grant.status = AccessStatus.Revoked;
+        emit AccessRevoked(consentTokenId);
     }
 }
