@@ -2,7 +2,8 @@
 
 # SaluData - Decentralized Secure Medical Records Management
 
-##🩺 The Problem
+## 🩺 The Problem
+
 Medical records management faces critical challenges in privacy, security, and access control. Patients lose control over their data once shared, and there's a constant risk of sensitive data breaches in traditional centralized systems.
 
 💡 Our Solution
