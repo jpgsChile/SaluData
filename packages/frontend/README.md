@@ -71,6 +71,14 @@ Our smart contract incorporates the encrypted metadata mechanism from Ava Labs' 
 
 SaluData represents the next generation of medical data management, combining the best of blockchain technology with advanced encryption standards to create a truly patient-centric and secure system that respects privacy while enabling necessary medical access.
 
+---
+
+## ✅ VERCEL
+
+https://saludata-5y6nwehec-kalchas-projects.vercel.app/
+
+---
+
 ## ✅ Video Demo
 
 https://www.youtube.com/watch?v=F0k-zdCk0hI
