@@ -6,10 +6,11 @@
 
 Medical records management faces critical challenges in privacy, security, and access control. Patients lose control over their data once shared, and there's a constant risk of sensitive data breaches in traditional centralized systems.
 
-💡 Our Solution
+## 💡 Our Solution
+
 SaluData is a decentralized protocol that enables patients to maintain complete control over their medical records while facilitating secure, temporary access to healthcare professionals through consent NFTs.
 
-🔐 Key Technical Features
+## 🔐 Key Technical Features
 Integration with Ava Labs' EncryptedMetadata
 Our smart contract incorporates the encrypted metadata mechanism from Ava Labs' EncryptedERC standard, implementing:
 
