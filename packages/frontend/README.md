@@ -177,6 +177,7 @@ https://testnet.snowtrace.io/address/0x070018089b50cdac6b25bdb60b7c71a829c29f10
 ---
 
 
-<img width="1280" height="550" alt="image" src="https://github.com/user-attachments/assets/d7e06d36-4c11-47ff-abc5-356f63f8c358" />
+<img width="1440" height="943" alt="image" src="https://github.com/user-attachments/assets/a8f63db4-d972-4d43-bded-294c64e12d51" />
+
 
 
