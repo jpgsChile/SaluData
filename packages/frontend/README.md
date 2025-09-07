@@ -1,78 +1,109 @@
-# SaluData Frontend
+<img width="825" height="811" alt="image" src="https://github.com/user-attachments/assets/09dba68b-5937-4c42-af7d-c006822a19dd" />
 
-Frontend moderno para la plataforma SaluData - Gestión segura de registros médicos en blockchain.
+# SaluData - Interoperable Digital Health Record MVP
 
-## Características
+## 🎯 General Objective
 
-- 🔐 **Conexión de Wallet**: Integración con MetaMask y otras wallets
-- 🔑 **Registro de Claves Públicas**: Registra tu clave de cifrado pública
-- 📄 **Registro Médico**: Registra registros médicos en la blockchain
-- 🛡️ **Gestión de Consentimientos**: Otorga y revoca permisos de acceso
-- 👁️ **Consulta de Acceso**: Consulta detalles de acceso a registros
+This project aims to build a Minimum Viable Product (MVP) of an interoperable digital health record on the **Avalanche** network. The goal is to empower patients by giving them full control over their medical data through a health wallet, smart contracts for permission management, and the integration of an **eERC-20 (EncryptedERC)** token to ensure secure information processing.
 
-## Tecnologías Utilizadas
+## ✅ Video Demo
 
-- **Next.js 15** - Framework React
-- **TypeScript** - Tipado estático
-- **Tailwind CSS** - Estilos
-- **Wagmi** - Integración con Ethereum
-- **Viem** - Cliente Ethereum
-- **Radix UI** - Componentes accesibles
-- **Lucide React** - Iconos
+https://www.youtube.com/watch?v=F0k-zdCk0hI
 
-## Instalación
+---
 
-```bash
-npm install
-```
+## ✅ Deploy Contrat 
 
-## Configuración
+https://testnet.snowtrace.io/address/0x953bE4C9AA04052a97dD039eFA6E45D23Cd30b63
 
-1. **Configurar la dirección del contrato**:
-   - Edita `src/lib/wagmi.ts`
-   - Actualiza `SALUDA_CONTRACT_ADDRESS` con la dirección del contrato desplegado
+---
 
-2. **Configurar la red**:
-   - Asegúrate de que tu wallet esté conectada a la red correcta (localhost, Fuji, etc.)
+## 🛠️ Key Technologies
 
-## Desarrollo
+- **Blockchain:** Avalanche (Fuji Testnet, Higia L1)
+- **Smart Contracts:** Solidity
+- **Tokens:** ERC-20 (`HealthToken - HLT`), eERC-20 (`EncryptedERC`)
+- **Development:** Remix / Hardhat / Foundry
+- **Wallets:** Core | Metamask
+- **Decentralized Storage:** IPFS
+- **Frontend:** Node.js, Web3.js / Ethers.js, Privy
 
-```bash
-npm run dev
-```
+---
 
-Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
+## 🗺️ Growth Roadmap – 2 Weeks
 
-## Uso
+### 🗓️ Week 1 – Fundamentals and Technical Foundation
 
-1. **Conecta tu Wallet**: Usa el botón de conexión para conectar MetaMask
-2. **Registra tu Clave Pública**: Primero registra tu clave de cifrado
-3. **Registra Registros Médicos**: Sube tus registros médicos a la blockchain
-4. **Otorga Consentimientos**: Comparte acceso con doctores específicos
-5. **Consulta Accesos**: Revisa los detalles de acceso a tus registros
+#### **Milestone 1: Technical Setup (Day 1-2)**
 
-## Estructura del Proyecto
+* **Environment Configuration:**
+    * Set up Remix / Hardhat / Foundry.
+    * Connect Core | Metamask wallets to the Avalanche Fuji Testnet.
+* **Creation of the eERC-20 `HealthToken (HLT)`:**
+    * Fixed initial supply for the demo.
+    * The token will be used to "pay for" and record data access.
+* **Architecture Design:**
+    * **Patient:** Owner of the medical record (identified by their public key).
+    * **Medical Record:** A JSON file stored on IPFS, linked from the smart contract.
+    * **Institutions:** Registered addresses in the contract (labs, clinics).
+    * **Higia:** L1 configuration for the private solution development.
 
-```
-src/
-├── app/                 # Páginas de Next.js
-├── components/          # Componentes React
-│   ├── ui/             # Componentes base de UI
-│   └── ...             # Componentes específicos
-├── lib/                # Utilidades y configuración
-└── ...
-```
+#### **Milestone 2: Digital Medical Record (Day 3-4)**
 
-## Componentes Principales
+* **Smart Contract Development (Solidity):**
+    * Function for patient registration.
+    * Function for assigning medical records (storing the IPFS hash).
+    * Logic for medical data encryption.
+* **Minimal Interface (Backend/Frontend):**
+    * Develop a basic DApp with `Node.js` and `Web3.js/Ethers.js` or `Privy`.
+    * Implement wallet connection with Core | Metamask.
+    * Create a flow to upload a medical exam: the file is uploaded to IPFS, and the hash is registered on the blockchain.
+    * Panel for visualizing the record history.
 
-- `WalletConnect` - Conexión de wallet
-- `RegisterPublicKey` - Registro de claves públicas
-- `RegisterRecord` - Registro de registros médicos
-- `GrantConsent` - Otorgamiento de consentimientos
-- `AccessDetails` - Consulta de detalles de acceso
+---
 
-## Seguridad
+### 🗓️ Week 2 – Permissions, Token, and Demo
 
-- Todas las transacciones requieren confirmación del usuario
-- Los datos sensibles están cifrados antes de enviarse a la blockchain
-- Solo el propietario puede otorgar o revocar permisos
+#### **Milestone 3: Permissions and Access (Day 5-7)**
+
+* **Smart Contract for Permissions:**
+    * `requestAccess(entity, patientID)`: Function for an institution to request access.
+    * `grantAccess(entity, recordID)`: Function for the patient to approve a request.
+    * `revokeAccess(entity, recordID)`: Function for the patient to revoke access.
+* **MVP Flow:**
+    * A laboratory uploads an exam (registers on IPFS and the contract).
+    * A clinic requests access to the exam.
+    * The patient receives a notification in the DApp and can approve or reject the request.
+* **eERC-20 Token Integration:**
+    * Use the token for patient data encryption and security.
+
+#### **Milestone 4: Interoperability and Final Demo (Day 8-10)**
+
+* **Simulated APIs:**
+    * **Laboratory:** A `POST` endpoint to simulate uploading an exam to IPFS and the contract.
+    * **Clinic:** A `GET` endpoint to validate access through the permissions contract.
+* **Unified Web Interface:**
+    * **Patient Panel:** To approve access and view their history.
+    * **Institution Panel:** To request access and read data once approved.
+
+---
+
+## 🗓️ Final Deliverables (Day 11-14)
+
+1.  **eERC-20 Contract** deployed on the Avalanche Higia L1 Testnet for SaluData.
+2.  **Medical Record and Permissions Contract** in Solidity, functional and deployed.
+3.  **Web DApp (Proof of Concept):**
+    * Core | Metamask connection.
+    * Record management (upload).
+    * Access management (approval/revocation).
+4.  **End-to-End Functional Demo:**
+    * Complete flow: Patient registers → Lab uploads exam → Clinic requests access → Patient approves.
+5.  **Pitch Deck and Technical Report:**
+    * A document detailing the architecture, the functional demo, and the next steps for the project.
+
+---
+
+
+<img width="1280" height="550" alt="image" src="https://github.com/user-attachments/assets/d7e06d36-4c11-47ff-abc5-356f63f8c358" />
+
+
