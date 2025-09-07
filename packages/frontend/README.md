@@ -4,7 +4,75 @@
 
 ## 🎯 General Objective
 
-This project aims to build a Minimum Viable Product (MVP) of an interoperable digital health record on the **Avalanche** network. The goal is to empower patients by giving them full control over their medical data through a health wallet, smart contracts for permission management, and the integration of an **eERC-20 (EncryptedERC)** token to ensure secure information processing.
+SaluData - Decentralized Secure Medical Records Management
+🩺 The Problem
+Medical records management faces critical challenges in privacy, security, and access control. Patients lose control over their data once shared, and there's a constant risk of sensitive data breaches in traditional centralized systems.
+
+💡 Our Solution
+SaluData is a decentralized protocol that enables patients to maintain complete control over their medical records while facilitating secure, temporary access to healthcare professionals through consent NFTs.
+
+🔐 Key Technical Features
+Integration with Ava Labs' EncryptedMetadata
+Our smart contract incorporates the encrypted metadata mechanism from Ava Labs' EncryptedERC standard, implementing:
+
+Secure communication through encrypted events via the PrivateMessage event
+
+Secure DEK key transmission using EncryptedMetadata's encrypted messaging pattern
+
+Standardized metadata structure that preserves communication privacy
+
+Core Functionalities
+Public key registration for asymmetric encryption
+
+NFT-based consent receipts with status and expiration
+
+Granular access control that patients can revoke anytime
+
+Off-chain medical metadata with on-chain verifiable references
+
+🏗️ Hybrid Architecture
+On-chain (Blockchain)
+Consent NFTs and access control
+
+Public keys and verification hashes
+
+Encrypted metadata events
+
+Off-chain (Decentralized Storage)
+Actual medical records (IPFS, Arweave, etc.)
+
+Data encrypted with DEKs (Data Encryption Keys)
+
+⚡ Workflow
+Registration: Patients and doctors register their public keys
+
+Consent: Patients grant access through NFTs with encrypted DEKs
+
+Access: Doctors retrieve DEKs through encrypted events
+
+Decryption: Access to off-chain medical records using DEKs
+
+Revocation: Patients can revoke access at any time
+
+🛡️ Security Advantages
+Medical data never on blockchain - Only references and encrypted keys
+
+Dual encryption layer - Asymmetric (public keys) and symmetric (DEKs)
+
+Complete audit trail - All access is immutably recorded
+
+Patient-centric control - Only patients grant and revoke access
+
+🌐 Use Cases
+Secure telemedicine - Temporary medical records sharing
+
+Medical research - Verifiable consent for data usage
+
+Health insurance - Audited access to relevant information
+
+Medical emergencies - Pre-approved emergency access protocols
+
+SaluData represents the next generation of medical data management, combining the best of blockchain technology with advanced encryption standards to create a truly patient-centric and secure system that respects privacy while enabling necessary medical access.
 
 ## ✅ Video Demo
 
@@ -14,7 +82,7 @@ https://www.youtube.com/watch?v=F0k-zdCk0hI
 
 ## ✅ Deploy Contrat 
 
-https://testnet.snowtrace.io/address/0x953bE4C9AA04052a97dD039eFA6E45D23Cd30b63
+https://testnet.snowtrace.io/address/0x070018089b50cdac6b25bdb60b7c71a829c29f10
 
 ---
 
