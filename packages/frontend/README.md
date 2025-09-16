@@ -80,7 +80,7 @@ https://app.saludata.xyz/
 
 ## ✅ Video Demo
 
-https://www.youtube.com/watch?v=F0k-zdCk0hI
+https://youtu.be/e0Ng8ChmLGE
 
 ---
 
