@@ -73,10 +73,9 @@ SaluData represents the next generation of medical data management, combining th
 
 ---
 
-## ✅ VERCEL
+## ✅ dApps
 
-https://saludata-5y6nwehec-kalchas-projects.vercel.app/
-
+https://app.saludata.xyz/
 ---
 
 ## ✅ Video Demo
